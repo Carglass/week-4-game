@@ -18,6 +18,9 @@ let game = {
     attacker: "none",
     defender: "none",
     defenders: [],
+    // attack manages the attack, 
+    // then has the attacker AP increase,
+    // then suppresses the game defender if he's dead
     attack: function(attacker,defender){
         attacker.HP = attacker.HP - defender.CP;
         defender.HP = defender.HP - attacker.AP;
@@ -28,6 +31,10 @@ let game = {
             game.defender = "none";
         }
     },
+    // We have several "status" functions that are called to evaluate different states
+    // that can trigger a new game phase, or a display update.
+    //
+    // defenderStatus returns true if defender HP > 0, else false.
     defenderStatus: function(){
         if (this.defender.HP <= 0){
             return false;
@@ -35,6 +42,7 @@ let game = {
             return true;
         }
     },
+    // defendersAreDead returnes true if all defensers are dead. 
     defendersAreDead: function(){
         let allDead = true;
         for (let i=0; i<this.defenders.length; i++){
@@ -44,7 +52,9 @@ let game = {
         }
         return allDead;
     },
-    displayGameStatus: function(){
+    // displayPlayersStatus updates the players cards look to reflect
+    // their current status.
+    displayPlayersStatus: function(){
         for (let i=0; i<this.players.length; i++){
             if (this.players[i] === this.attacker){
                 $("#" + this.players[i].id).css("background-color","green");
@@ -58,7 +68,8 @@ let game = {
 }
 
 $( document ).ready(function() {
-
+    // the event when Luke card is clicked, may depend 
+    // on game phase
     $("#luke").click(function(){
         if (game.attacker === "none"){
             game.attacker = luke;
@@ -71,9 +82,11 @@ $( document ).ready(function() {
         else {
             console.log("Attacker has been chosen");
         }
-        game.displayGameStatus();
+        game.displayPlayersStatus();
     });
 
+    // the event when Obi-Wan card is clicked, may depend 
+    // on game phase
     $("#obi").click(function(){
         if (game.attacker === "none"){
             game.attacker = obiwan;
@@ -85,9 +98,11 @@ $( document ).ready(function() {
         } else {
             console.log("Everybody has been chosen");
         }
-        game.displayGameStatus();
+        game.displayPlayersStatus();
     });
 
+    // the event when Palpatine card is clicked, may depend 
+    // on game phase
     $("#palpatine").click(function(){
         if (game.attacker === "none"){
             game.attacker = palpatine;
@@ -99,9 +114,10 @@ $( document ).ready(function() {
         } else {
             console.log("Everybody has been chosen");
         }
-        game.displayGameStatus();
+        game.displayPlayersStatus();
     });
 
+    // What happens when Attack button is clicked
     $("#attack").click(function(){
         if (game.defender !== "none" && game.attacker !== "none"){
             if (game.defenderStatus()){
@@ -123,7 +139,7 @@ $( document ).ready(function() {
                 console.log("Pick your players first dummy");
             }
         }
-        game.displayGameStatus();
+        game.displayPlayersStatus();
     });
 });
 
