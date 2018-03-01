@@ -14,6 +14,7 @@ let luke = new SWChar("Luke", 100, 10, 8, "luke");
 let palpatine = new SWChar("Palpatine",150,15,3, "palpatine");
 
 let game = {
+    state: "init",
     players: [obiwan,luke,palpatine],
     attacker: "none",
     defender: "none",
@@ -27,8 +28,12 @@ let game = {
         attacker.AP = attacker.AP*2;
         console.log(attacker);
         console.log(defender);
-        if (defender.HP <= 0){
-            game.defender = "none";
+        if (!this.defenderStatus()){
+            this.defender = "none";
+            game.state = "attackerSelected";
+        }
+        if (this.defendersAreDead()){
+            game.state = "win";
         }
     },
     // We have several "status" functions that are called to evaluate different states
@@ -70,33 +75,67 @@ let game = {
 $( document ).ready(function() {
     // the event when Luke card is clicked, may depend 
     // on game phase
+    // $("#luke").click(function(){
+    //     if (game.attacker === "none"){
+    //         game.attacker = luke;
+    //         game.defenders = [obiwan,palpatine];
+    //         console.log("Luke attacks");
+    //     } else if (game.defender === "none"){
+    //         game.defender = luke;
+    //         console.log("Luke defends");
+    //     }
+    //     else {
+    //         console.log("Attacker has been chosen");
+    //     }
+    //     game.displayPlayersStatus();
+    // });
     $("#luke").click(function(){
-        if (game.attacker === "none"){
+        if (game.state === "init"){
             game.attacker = luke;
-            game.defenders = [obiwan,palpatine];
-            console.log("Luke attacks");
-        } else if (game.defender === "none"){
+            game.defenders = [palpatine,obiwan];
+            game.state = "attackerSelected";
+            console.log("Palpi is the attacker");
+        } else if (game.state === "attackerSelected"){
             game.defender = luke;
-            console.log("Luke defends");
-        }
-        else {
-            console.log("Attacker has been chosen");
+            console.log("Palpi defends");
+            game.state = "battleEngaged";
+        } else if (game.state === "battleEngaged"){
+            console.log("Everybody has been chosen");
+        } else {
+            console.log("game is finished");
         }
         game.displayPlayersStatus();
     });
 
     // the event when Obi-Wan card is clicked, may depend 
     // on game phase
+    // $("#obi").click(function(){
+    //     if (game.attacker === "none"){
+    //         game.attacker = obiwan;
+    //         game.defenders = [luke,palpatine];
+    //         console.log("Obi attacks");
+    //     } else if(game.defender === "none"){
+    //         game.defender = obiwan;
+    //         console.log("Obi defends");
+    //     } else {
+    //         console.log("Everybody has been chosen");
+    //     }
+    //     game.displayPlayersStatus();
+    // });
     $("#obi").click(function(){
-        if (game.attacker === "none"){
+        if (game.state === "init"){
             game.attacker = obiwan;
             game.defenders = [luke,palpatine];
-            console.log("Obi attacks");
-        } else if(game.defender === "none"){
+            game.state = "attackerSelected";
+            console.log("Obi is the attacker");
+        } else if (game.state === "attackerSelected"){
             game.defender = obiwan;
             console.log("Obi defends");
-        } else {
+            game.state = "battleEngaged";
+        } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
+        } else {
+            console.log("game is finished");
         }
         game.displayPlayersStatus();
     });
@@ -104,41 +143,53 @@ $( document ).ready(function() {
     // the event when Palpatine card is clicked, may depend 
     // on game phase
     $("#palpatine").click(function(){
-        if (game.attacker === "none"){
+        if (game.state === "init"){
             game.attacker = palpatine;
             game.defenders = [luke,obiwan];
-            console.log("Palpi attacks");
-        } else if (game.defender === "none"){
+            game.state = "attackerSelected";
+            console.log("Palpi is the attacker");
+        } else if (game.state === "attackerSelected"){
             game.defender = palpatine;
             console.log("Palpi defends");
-        } else {
+            game.state = "battleEngaged";
+        } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
+        } else {
+            console.log("game is finished");
         }
         game.displayPlayersStatus();
     });
 
     // What happens when Attack button is clicked
     $("#attack").click(function(){
-        if (game.defender !== "none" && game.attacker !== "none"){
-            if (game.defenderStatus()){
-                game.attack(game.attacker,game.defender);
-            } else {
-                console.log(game.defender.name + " is dead!");
-                game.defender = "none";
-                if (game.defendersAreDead()){
-                    console.log("You killed everybody!");
-                } else {
-                    console.log("Choose the next defender")
-                }
-            }
-        } else {
-            if (game.defendersAreDead()){
-                $("#bodyContent").append("<h1>You killed everybody</h1>");
-                console.log("You killed everybody!");
-            } else {
-                console.log("Pick your players first dummy");
-            }
+        if (game.status === "init" || game.status === "attackerSelected"){
+            console.log("Select the players first!");
+        } else if (game.status === "battleEngaged"){
+            game.attack(attacker,defender);
+        } else if (game.state === "win" || game.state === "loose"){
+            console.log("game is finished");
         }
+            
+            
+        //     if (game.defenderStatus()){
+        //         game.attack(game.attacker,game.defender);
+        //     } else {
+        //         console.log(game.defender.name + " is dead!");
+        //         game.defender = "none";
+        //         if (game.defendersAreDead()){
+        //             console.log("You killed everybody!");
+        //         } else {
+        //             console.log("Choose the next defender")
+        //         }
+        //     }
+        // } else {
+        //     if (game.defendersAreDead()){
+        //         $("#bodyContent").append("<h1>You killed everybody</h1>");
+        //         console.log("You killed everybody!");
+        //     } else {
+        //         console.log("Pick your players first dummy");
+        //     }
+        // }
         game.displayPlayersStatus();
     });
 });
