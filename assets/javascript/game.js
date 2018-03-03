@@ -24,13 +24,11 @@ SWChar.prototype.displayHP = function(){
 }
 
 SWChar.prototype.boostAP = function(){
-    console.log("im executed");
     this.AP = this.AP + this.baseAP;
     this.displayAP();
 }
 
 SWChar.prototype.displayAP = function(){
-    console.log("im run");
     $("#" + this.id + "AP").remove();
     let ap = $("<div>" + this.AP + " AP</div>");
     ap.attr("id",this.id + "AP");
@@ -38,8 +36,9 @@ SWChar.prototype.displayAP = function(){
 }
 
 SWChar.prototype.reset = function(){
-    this.HP = this.maxHP;
+    this.setHP(this.maxHP);
     this.AP = this.baseAP;
+    this.displayAP();
     $('#defenders').append($('#'+this.id));
 }
 
@@ -60,9 +59,10 @@ let game = {
     attack: function(attacker,defender){
         attacker.setHP(attacker.HP - defender.CP);
         defender.setHP(defender.HP - attacker.AP);
+        if (defender.HP <0){
+            defender.setHP(0);
+        }
         attacker.boostAP();
-        console.log(attacker);
-        console.log(defender);
         if (!this.defenderStatus()){
             $('#deadDefenders').append($('#' + this.defender.id));
             this.defender = "none";
@@ -99,6 +99,7 @@ let game = {
     // their current status.
     displayPlayersStatus: function(){
         for (let i=0; i<this.players.length; i++){
+            $("#" + this.players[i].id).css("background-color","lightblue");
             if (this.players[i] === this.attacker){
                 $("#" + this.players[i].id).css("background-color","green");
             } else if (this.players[i] === this.defender && this.players[i].HP > 0){
@@ -153,13 +154,13 @@ $( document ).ready(function() {
             game.attacker = luke;
             game.defenders = [palpatine,obiwan];
             game.setState("attackerSelected");
-            console.log("Palpi is the attacker");
             $('#attacker').append($('#luke'));
         } else if (game.state === "attackerSelected"){
-            game.defender = luke;
-            console.log("Palpi defends");
-            game.setState("battleEngaged");
-            $('#currentDefender').append($('#luke'));
+            if (game.attacker !== luke){
+                game.defender = luke;
+                game.setState("battleEngaged");
+                $('#currentDefender').append($('#luke'));
+            }
         } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
         } else {
@@ -175,13 +176,13 @@ $( document ).ready(function() {
             game.attacker = obiwan;
             game.defenders = [luke,palpatine];
             game.setState("attackerSelected");
-            console.log("Obi is the attacker");
             $('#attacker').append($('#obi'));
         } else if (game.state === "attackerSelected"){
-            game.defender = obiwan;
-            console.log("Obi defends");
-            game.setState("battleEngaged");
-            $('#currentDefender').append($('#obi'));
+            if (game.attacker !== obiwan){
+                game.defender = obiwan;
+                game.setState("battleEngaged");
+                $('#currentDefender').append($('#obi'));
+            }
         } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
         } else {
@@ -197,13 +198,13 @@ $( document ).ready(function() {
             game.attacker = palpatine;
             game.defenders = [luke,obiwan];
             game.setState("attackerSelected");
-            console.log("Palpi is the attacker");
             $('#attacker').append($('#palpatine'));
         } else if (game.state === "attackerSelected"){
-            game.defender = palpatine;
-            console.log("Palpi defends");
-            game.setState("battleEngaged");
-            $('#currentDefender').append($('#palpatine'));
+            if (game.attacker !== palpatine){
+                game.defender = palpatine;
+                game.setState("battleEngaged");
+                $('#currentDefender').append($('#palpatine'));
+            }
         } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
         } else {
@@ -214,7 +215,6 @@ $( document ).ready(function() {
 
     // What happens when Attack button is clicked
     $("#attack").click(function(){
-        console.log("Button works");
         if (game.state === "init" || game.state === "attackerSelected"){
             console.log("Select the players first!");
         } else if (game.state === "battleEngaged"){
@@ -227,7 +227,6 @@ $( document ).ready(function() {
     });
 
     $("#restart").click(function(){
-        console.log("run");
         luke.reset();
         obiwan.reset();
         palpatine.reset();
