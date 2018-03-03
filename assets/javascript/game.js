@@ -30,11 +30,13 @@ let game = {
         console.log(defender);
         if (!this.defenderStatus()){
             this.defender = "none";
-            game.state = "attackerSelected";
+            this.setState("attackerSelected");
         }
         if (this.defendersAreDead()){
-            game.state = "win";
+            this.setState("win");
         }
+        this.displayGameState();
+
     },
     // We have several "status" functions that are called to evaluate different states
     // that can trigger a new game phase, or a display update.
@@ -69,6 +71,29 @@ let game = {
                 $("#" + this.players[i].id).css("background-color","grey");
             }
         }
+    },
+    displayGameState: function(){
+        $("#scoreText").remove();
+        if (game.state === "win"){
+            let scoreText = $("<h1>You won!</h1>").attr("id","scoreText").addClass("col-6");
+            $("#score").append(scoreText);
+        } else if (game.state === "loose"){
+            let scoreText = $("<h1>You lost!</h1>").attr("id","scoreText").addClass("col-6");
+            $("#score").append(scoreText);
+        } else if (game.state === "init"){
+            let scoreText = $("<h1>Select your character</h1>").attr("id","scoreText").addClass("col-6");
+            $("#score").append(scoreText);
+        } else if (game.state === "attackerSelected"){
+            let scoreText = $("<h1>Select the next opponent</h1>").attr("id","scoreText").addClass("col-6");
+            $("#score").append(scoreText);
+        } else if (game.state === "battleEngaged"){
+            let scoreText = $("<h1>Now Fight!</h1>").attr("id","scoreText").addClass("col-6");
+            $("#score").append(scoreText);
+        }
+    },
+    setState: function(newState){
+        this.state = newState;
+        this.displayGameState();
     }
 }
 
@@ -93,12 +118,12 @@ $( document ).ready(function() {
         if (game.state === "init"){
             game.attacker = luke;
             game.defenders = [palpatine,obiwan];
-            game.state = "attackerSelected";
+            game.setState("attackerSelected");
             console.log("Palpi is the attacker");
         } else if (game.state === "attackerSelected"){
             game.defender = luke;
             console.log("Palpi defends");
-            game.state = "battleEngaged";
+            game.setState("battleEngaged");
         } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
         } else {
@@ -126,12 +151,12 @@ $( document ).ready(function() {
         if (game.state === "init"){
             game.attacker = obiwan;
             game.defenders = [luke,palpatine];
-            game.state = "attackerSelected";
+            game.setState("attackerSelected");
             console.log("Obi is the attacker");
         } else if (game.state === "attackerSelected"){
             game.defender = obiwan;
             console.log("Obi defends");
-            game.state = "battleEngaged";
+            game.setState("battleEngaged");
         } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
         } else {
@@ -146,12 +171,12 @@ $( document ).ready(function() {
         if (game.state === "init"){
             game.attacker = palpatine;
             game.defenders = [luke,obiwan];
-            game.state = "attackerSelected";
+            game.setState("attackerSelected");
             console.log("Palpi is the attacker");
         } else if (game.state === "attackerSelected"){
             game.defender = palpatine;
             console.log("Palpi defends");
-            game.state = "battleEngaged";
+            game.setState("battleEngaged");
         } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
         } else {
@@ -162,15 +187,15 @@ $( document ).ready(function() {
 
     // What happens when Attack button is clicked
     $("#attack").click(function(){
-        if (game.status === "init" || game.status === "attackerSelected"){
+        console.log("Button works");
+        if (game.state === "init" || game.state === "attackerSelected"){
             console.log("Select the players first!");
-        } else if (game.status === "battleEngaged"){
-            game.attack(attacker,defender);
+        } else if (game.state === "battleEngaged"){
+            game.attack(game.attacker,game.defender);
         } else if (game.state === "win" || game.state === "loose"){
             console.log("game is finished");
         }
-            
-            
+         
         //     if (game.defenderStatus()){
         //         game.attack(game.attacker,game.defender);
         //     } else {
