@@ -4,9 +4,27 @@
 function SWChar(name, HP, AP, CP, id){
     this.name = name;
     this.HP = HP;
+    this.maxHP = HP;
     this.AP = AP;
+    this.baseAP = AP;
     this.CP = CP;
     this.id = id;
+}
+
+SWChar.prototype.setHP = function(newHP){
+    this.HP = newHP;
+    this.displayHP();
+}
+
+SWChar.prototype.displayHP = function(){
+    $("#" + this.id + "HP").remove();
+    let hp = $("<div>" + this.HP + "</div>");
+    hp.attr("id",this.id + "HP");
+    $("#" + this.id).append(hp);
+}
+
+SWChar.prototype.boostAP = function(){
+    this.AP = this.AP + this.baseAP;
 }
 
 let obiwan = new SWChar("Obi-Wan", 100, 10, 10, "obi");
@@ -23,8 +41,8 @@ let game = {
     // then has the attacker AP increase,
     // then suppresses the game defender if he's dead
     attack: function(attacker,defender){
-        attacker.HP = attacker.HP - defender.CP;
-        defender.HP = defender.HP - attacker.AP;
+        attacker.setHP(attacker.HP - defender.CP);
+        defender.setHP(defender.HP - attacker.AP);
         attacker.AP = attacker.AP*2;
         console.log(attacker);
         console.log(defender);

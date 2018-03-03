@@ -14,10 +14,17 @@
     <script src="./assets/javascript/game.js"></script>
 </head>
 <body id="bodyContent">
-    <div class="row">
+    <div class="row" id="defenders">
         <div id="luke" class="col-4">Choose Luke</div>
         <div id="obi" class="col-4">Choose Obi</div>
         <div id="palpatine" class="col-4">Choose Palpatine</div>
+    </div>
+    <div class="row" id="liveDefenders">
+        <div class="col-6" id="currentDefender">currentDefender</div>
+        <div class="col-6" id="deadDefenders">deadDefenders</div>
+    </div>
+    <div class="row" id="attacker">
+        <div class="col-12">Attacker</div>
     </div>
     <div class="row">
         <button class="col-3" id="attack">Attack</button>
