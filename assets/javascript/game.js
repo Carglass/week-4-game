@@ -18,9 +18,11 @@ SWChar.prototype.setHP = function(newHP){
 
 SWChar.prototype.displayHP = function(){
     $("#" + this.id + "HP").remove();
-    let hp = $("<div>" + this.HP + " HP</div>");
-    hp.attr("id",this.id + "HP");
+    let hp = $("<div>"+ this.HP +"HP</div>").css("border","1px solid black");
+    let currentHp = $("<div></div>").css("width",Math.floor((this.HP/this.maxHP)*100)+"%").css("background-color","rgba(71, 175, 26, 0.5)").css("height","24px").css("position","absolute").css("top","0");
+    hp.attr("id",this.id+"HP").css("position","relative");
     $("#" + this.id + "Stats").append(hp);
+    hp.append(currentHp);
 }
 
 SWChar.prototype.boostAP = function(){
@@ -40,6 +42,9 @@ SWChar.prototype.reset = function(){
     this.AP = this.baseAP;
     this.displayAP();
     $('#defenders').append($('#'+this.id));
+    $('#'+this.id).removeClass("col-6");
+    $('#'+this.id).removeClass("col-3");
+    $('#'+this.id).addClass("col-3");
 }
 
 let obiwan = new SWChar("Obi-Wan", 100, 10, 10, "obi");
@@ -160,6 +165,8 @@ $( document ).ready(function() {
                 game.defender = luke;
                 game.setState("battleEngaged");
                 $('#currentDefender').append($('#luke'));
+                $('#luke').removeClass('col-3');
+                $('#luke').addClass('col-6');
             }
         } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
@@ -182,6 +189,8 @@ $( document ).ready(function() {
                 game.defender = obiwan;
                 game.setState("battleEngaged");
                 $('#currentDefender').append($('#obi'));
+                $('#obi').removeClass('col-3');
+                $('#obi').addClass('col-6');
             }
         } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
@@ -204,6 +213,8 @@ $( document ).ready(function() {
                 game.defender = palpatine;
                 game.setState("battleEngaged");
                 $('#currentDefender').append($('#palpatine'));
+                $('#palpatine').removeClass('col-3');
+                $('#palpatine').addClass('col-6');
             }
         } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
