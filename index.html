@@ -13,11 +13,41 @@
   crossorigin="anonymous"></script>
     <script src="./assets/javascript/game.js"></script>
 </head>
-<body id="bodyContent">
+<body id="bodyContent" class="container">
     <div class="row" id="defenders">
-        <div id="luke" class="col-4">Choose Luke</div>
-        <div id="obi" class="col-4">Choose Obi</div>
-        <div id="palpatine" class="col-4">Choose Palpatine</div>
+        <div class="col-4" id="luke">
+            <div class="card" >
+                <img class="card-img-top" src="./assets/images/luke.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Luke</h5>
+                    <div class="card-text" id="lukeStats"></div>
+                    <a href="#" class="btn btn-primary">Choose Luke</a>
+                </div>
+            </div>
+        </div>
+        <!-- <div id="luke" class="col-4">Choose Luke</div> -->
+        <div class="col-4" id="obi">
+            <div class="card" >
+                <img class="card-img-top" src="./assets/images/obiwan.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Obi-Wan</h5>
+                    <div class="card-text" id="obiStats"></div>
+                    <a href="#" class="btn btn-primary">Choose Obi-Wan</a>
+                </div>
+            </div>
+        </div>
+        <!-- <div id="obi" class="col-4">Choose Obi</div> -->
+        <div class="col-4" id="palpatine">
+            <div class="card" >
+                <img class="card-img-top" src="./assets/images/sidious.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Palpatine</h5>
+                    <div class="card-text" id="palpatineStats"></div>
+                    <a href="#" class="btn btn-primary">Choose Palpatine</a>
+                </div>
+            </div>
+        </div>
+        <!-- <div id="palpatine" class="col-4">Choose Palpatine</div> -->
     </div>
     <div class="row" id="liveDefenders">
         <div class="col-6" id="currentDefender">currentDefender</div>

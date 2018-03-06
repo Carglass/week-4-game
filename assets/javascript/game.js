@@ -20,7 +20,7 @@ SWChar.prototype.displayHP = function(){
     $("#" + this.id + "HP").remove();
     let hp = $("<div>" + this.HP + " HP</div>");
     hp.attr("id",this.id + "HP");
-    $("#" + this.id).append(hp);
+    $("#" + this.id + "Stats").append(hp);
 }
 
 SWChar.prototype.boostAP = function(){
@@ -32,7 +32,7 @@ SWChar.prototype.displayAP = function(){
     $("#" + this.id + "AP").remove();
     let ap = $("<div>" + this.AP + " AP</div>");
     ap.attr("id",this.id + "AP");
-    $("#" + this.id).append(ap);
+    $("#" + this.id +"Stats").append(ap);
 }
 
 SWChar.prototype.reset = function(){
@@ -99,7 +99,7 @@ let game = {
     // their current status.
     displayPlayersStatus: function(){
         for (let i=0; i<this.players.length; i++){
-            $("#" + this.players[i].id).css("background-color","lightblue");
+            $("#" + this.players[i].id).css("background-color","transparent");
             if (this.players[i] === this.attacker){
                 $("#" + this.players[i].id).css("background-color","green");
             } else if (this.players[i] === this.defender && this.players[i].HP > 0){
