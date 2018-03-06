@@ -142,6 +142,7 @@ let game = {
         this.defender = "none";
         this.defenders = [];
         this.state = "init";
+        this.displayGameState();
     }
 }
 
@@ -152,6 +153,7 @@ $( document ).ready(function() {
     luke.displayAP();
     palpatine.displayHP();
     palpatine.displayAP();
+    game.displayGameState();
     // the event when Luke card is clicked, may depend 
     // on game phase
     $("#luke").click(function(){
