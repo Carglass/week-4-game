@@ -47,14 +47,15 @@ SWChar.prototype.reset = function(){
     $('#'+this.id).addClass("col-3");
 }
 
-let obiwan = new SWChar("Obi-Wan", 100, 10, 10, "obi");
-let luke = new SWChar("Luke", 100, 10, 8, "luke");
-let palpatine = new SWChar("Palpatine",150,15,3, "palpatine");
+let obiwan = new SWChar("Obi-Wan", 120, 11, 16, "obi");
+let luke = new SWChar("Luke", 110, 14, 8, "luke");
+let palpatine = new SWChar("Palpatine",130,10,13, "palpatine");
+let rey = new SWChar("Rey", 90, 18, 19, 'rey');
 
 
 let game = {
     state: "init",
-    players: [obiwan,luke,palpatine],
+    players: [obiwan,luke,palpatine, rey],
     attacker: "none",
     defender: "none",
     defenders: [],
@@ -75,6 +76,11 @@ let game = {
         }
         if (this.defendersAreDead()){
             this.setState("win");
+        }
+        if(this.attacker.HP <= 0){
+            this.attacker.HP = 0;
+            this.setState('loose');
+            this.attacker.displayHP();
         }
         this.displayGameState();
 
@@ -153,13 +159,15 @@ $( document ).ready(function() {
     luke.displayAP();
     palpatine.displayHP();
     palpatine.displayAP();
+    rey.displayHP();
+    rey.displayAP();
     game.displayGameState();
     // the event when Luke card is clicked, may depend 
     // on game phase
     $("#luke").click(function(){
         if (game.state === "init"){
             game.attacker = luke;
-            game.defenders = [palpatine,obiwan];
+            game.defenders = [palpatine,obiwan,rey];
             game.setState("attackerSelected");
             $('#attacker').append($('#luke'));
         } else if (game.state === "attackerSelected"){
@@ -183,7 +191,7 @@ $( document ).ready(function() {
     $("#obi").click(function(){
         if (game.state === "init"){
             game.attacker = obiwan;
-            game.defenders = [luke,palpatine];
+            game.defenders = [luke,palpatine,rey];
             game.setState("attackerSelected");
             $('#attacker').append($('#obi'));
         } else if (game.state === "attackerSelected"){
@@ -207,7 +215,7 @@ $( document ).ready(function() {
     $("#palpatine").click(function(){
         if (game.state === "init"){
             game.attacker = palpatine;
-            game.defenders = [luke,obiwan];
+            game.defenders = [luke,obiwan,rey];
             game.setState("attackerSelected");
             $('#attacker').append($('#palpatine'));
         } else if (game.state === "attackerSelected"){
@@ -217,6 +225,30 @@ $( document ).ready(function() {
                 $('#currentDefender').append($('#palpatine'));
                 $('#palpatine').removeClass('col-3');
                 $('#palpatine').addClass('col-6');
+            }
+        } else if (game.state === "battleEngaged"){
+            console.log("Everybody has been chosen");
+        } else {
+            console.log("game is finished");
+        }
+        game.displayPlayersStatus();
+    });
+
+    // the event when Rey card is clicked, may depend 
+    // on game phase
+    $("#rey").click(function(){
+        if (game.state === "init"){
+            game.attacker = rey;
+            game.defenders = [palpatine,obiwan,luke];
+            game.setState("attackerSelected");
+            $('#attacker').append($('#rey'));
+        } else if (game.state === "attackerSelected"){
+            if (game.attacker !== rey){
+                game.defender = rey;
+                game.setState("battleEngaged");
+                $('#currentDefender').append($('#rey'));
+                $('#rey').removeClass('col-3');
+                $('#rey').addClass('col-6');
             }
         } else if (game.state === "battleEngaged"){
             console.log("Everybody has been chosen");
@@ -243,6 +275,7 @@ $( document ).ready(function() {
         luke.reset();
         obiwan.reset();
         palpatine.reset();
+        rey.reset();
         game.reset();
         game.displayPlayersStatus();
     })
